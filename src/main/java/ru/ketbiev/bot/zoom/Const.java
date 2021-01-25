@@ -6,6 +6,7 @@ public class Const {
     public final static String TOKEN_ZOOM = "";
     //02:11
 
+
     public static final String GET_USER_URL = "https://api.zoom.us/v2/users/%s";//{idUser}
 
     public final static String GET_MEETING_URL = "https://api.zoom.us/v2/meetings/%s";//{idMeeting}
