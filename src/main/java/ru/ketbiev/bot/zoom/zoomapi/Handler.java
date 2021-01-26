@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-
 public class Handler {
 
     public String getRequest (String url, Map<String, String> headerParams) {
@@ -26,7 +25,8 @@ public class Handler {
             }
             HttpResponse response = client.execute(get);
             return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            System.out.println("ops getRequest");
             return "Ooops";
         }
     }
@@ -40,7 +40,8 @@ public class Handler {
             post.setEntity(new StringEntity(bodyParams.toString()));
             client.execute(post);
             return "Ok";
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            System.out.println("ops postRequest");
             return "Ooops";
         }
     }
@@ -54,7 +55,8 @@ public class Handler {
             patch.setEntity(new StringEntity(bodyParams.toString()));
             client.execute(patch);
             return "Ok";
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            System.out.println("ops");
             return "Ooops";
         }
     }
@@ -67,7 +69,8 @@ public class Handler {
             }
             client.execute(delete);
             return "Ok";
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            System.out.println("ops deleteRequest");
             return "Ooops";
         }
     }

@@ -38,25 +38,4 @@ public  class Convert {
         }
     }
 
-//    public static String convertMeetingListToString(String str) {
-//        try {
-//            ObjectMapper mappe = new ObjectMapper();
-//            Map map = mappe.readValue(str, Map.class);
-//
-//            ArrayList<Map<String, String>> m = (ArrayList<Map<String, String>>) map.get("meetings");
-//
-//            String ss = "";
-//            for (Map<String, String> mm : m) {
-//                ss = "Id:           " + mm.get("id") +
-//                        "\nName:       " + mm.get("topic") +
-//                        "\nStart:      " + mm.get("start_time") +
-//                        "\nDuration:   " + mm.get("duration") +
-//                        //"\nAgenda:     " + mm.get("agenda") +
-//                        "\n\n";
-//            }
-//            return ss;
-//        } catch (JsonProcessingException jsonProcessingException) {
-//            return "Ooops";
-//        }
-//    }
 }

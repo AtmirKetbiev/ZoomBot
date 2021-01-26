@@ -4,7 +4,7 @@ import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import ru.ketbiev.bot.zoom.botController.MainController;
-
+import ru.ketbiev.bot.zoom.repositories.TokenRepositories;
 
 public class Bot extends AbilityBot {
     Bot(DefaultBotOptions botOptions) {
@@ -12,7 +12,8 @@ public class Bot extends AbilityBot {
     }
 
     public AbilityExtension abilityS() {
-        return new MainController(silent);
+        TokenRepositories tokenRepositories = new TokenRepositories(db);
+        return new MainController(silent, tokenRepositories);
     }
 
     @Override
