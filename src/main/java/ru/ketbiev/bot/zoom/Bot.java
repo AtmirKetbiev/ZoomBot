@@ -3,7 +3,8 @@ package ru.ketbiev.bot.zoom;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import ru.ketbiev.bot.zoom.botController.MainController;
+import ru.ketbiev.bot.zoom.config.Const;
+import ru.ketbiev.bot.zoom.controller.MainController;
 import ru.ketbiev.bot.zoom.repositories.TokenRepositories;
 
 public class Bot extends AbilityBot {

@@ -1,6 +1,6 @@
-package ru.ketbiev.bot.zoom.zoomController;
+package ru.ketbiev.bot.zoom.controller;
 
-import ru.ketbiev.bot.zoom.Const;
+import ru.ketbiev.bot.zoom.config.Const;
 import ru.ketbiev.bot.zoom.zoomapi.Handler;
 
 import java.util.HashMap;

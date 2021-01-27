@@ -1,5 +1,6 @@
 package ru.ketbiev.bot.zoom.zoomapi;
 
+import org.apache.log4j.Logger;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -9,19 +10,16 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.json.JSONObject;
-import ru.ketbiev.bot.zoom.Const;
+import ru.ketbiev.bot.zoom.config.Const;
 
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Base64;
 
 public class Authorization {
+
+    final static Logger logger = Logger.getLogger(Handler.class);
 
     public JSONObject getOAuthToken() {
         try {
@@ -58,6 +56,7 @@ public class Authorization {
                     OAuthResourceResponse.class);
             return new JSONObject(resourceResponse.getBody());
         } catch (OAuthSystemException | OAuthProblemException | IOException e) {
+            logger.error(e);
             return null;
         }
     }
@@ -89,6 +88,7 @@ public class Authorization {
                     OAuthResourceResponse.class);
             return new JSONObject(resourceResponse.getBody());
         } catch (OAuthSystemException | OAuthProblemException e) {
+            logger.error(e);
             return null;
         }
     }

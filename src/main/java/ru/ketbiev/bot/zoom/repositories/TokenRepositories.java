@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class TokenRepositories {
 
-    private Map<Long, UserToken> tokenMap;
+    private final Map<Long, UserToken> tokenMap;
 
     public TokenRepositories(DBContext db) {
         this.tokenMap = db.getMap("Teachers");
@@ -34,6 +34,10 @@ public class TokenRepositories {
         System.out.println("hm");
     }
 
+    public void delete(Long id) {
+        tokenMap.remove(id);
+    }
+
     public boolean checkTime(Long id) {
         return new Date().getTime() - tokenMap.get(id).getCreateDate().getTime() > 3600000;
     }
@@ -43,5 +47,4 @@ public class TokenRepositories {
         JSONObject object = authorization.refresh(refresh);
         set(id, object);
     }
-
 }

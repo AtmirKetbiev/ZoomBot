@@ -23,4 +23,6 @@ dependencies {
     compile group: 'org.telegram', name:'telegrambots-abilities', version: '4.4.0.1'
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.0'
+
+    compile group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.1'
 }
