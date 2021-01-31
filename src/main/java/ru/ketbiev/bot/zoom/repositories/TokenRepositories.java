@@ -1,6 +1,7 @@
 package ru.ketbiev.bot.zoom.repositories;
 
 import org.json.JSONObject;
+import org.springframework.stereotype.Repository;
 import org.telegram.abilitybots.api.db.DBContext;
 import ru.ketbiev.bot.zoom.model.UserToken;
 import ru.ketbiev.bot.zoom.zoomapi.Authorization;
@@ -8,17 +9,17 @@ import ru.ketbiev.bot.zoom.zoomapi.Authorization;
 import java.util.Date;
 import java.util.Map;
 
+@Repository
 public class TokenRepositories {
 
     private final Map<Long, UserToken> tokenMap;
 
     public TokenRepositories(DBContext db) {
-        this.tokenMap = db.getMap("Teachers");
+        this.tokenMap = db.getMap("Token");
     }
 
     public UserToken get(Long id) {
-        System.out.println(tokenMap);
-        if (tokenMap.size()==0 || !tokenMap.containsKey(id)) {
+        if (tokenMap.size() == 0 || !tokenMap.containsKey(id)) {
             return null;
         } else if (checkTime(id)) {
             refreshToken(id, tokenMap.get(id).getRefreshToken());
@@ -28,10 +29,9 @@ public class TokenRepositories {
 
     public void set(Long id, JSONObject object) {
         UserToken ut = new UserToken(object.get("access_token").toString(),
-                                    object.get("refresh_token").toString(),
-                                    new Date());
+                object.get("refresh_token").toString(),
+                new Date());
         this.tokenMap.put(id, ut);
-        System.out.println("hm");
     }
 
     public void delete(Long id) {

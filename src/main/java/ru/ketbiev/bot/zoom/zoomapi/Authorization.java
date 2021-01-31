@@ -23,9 +23,8 @@ public class Authorization {
 
     public JSONObject getOAuthToken() {
         try {
-            String authorizationUrl;
             OAuthClientRequest authorizationCodeRequest = OAuthClientRequest
-                    .authorizationLocation("https://zoom.us/oauth/authorize")
+                    .authorizationLocation(Const.AUTHORIZATION_URL_ZOOM)
                     .setResponseType("code")
                     .setClientId(Const.CLIENT_ID_ZOOM)
                     .setRedirectURI(Const.REDIRECT_URL_ZOOM)
@@ -33,26 +32,22 @@ public class Authorization {
 
             System.out.println("Opening browser for authentication at " + authorizationCodeRequest.getLocationUri());
             openBrowser(authorizationCodeRequest.getLocationUri());
-
-            System.out.println("Get token");
             String codeUser = httpReceiver();
 
-            //.............................................................//
-
             String encodedBytes = Base64.getEncoder().encodeToString(
-                    (Const.CLIENT_ID_ZOOM+":"+Const.SECRET_ID_ZOOM).getBytes());
+                    (Const.CLIENT_ID_ZOOM + ":" + Const.SECRET_ID_ZOOM).getBytes());
 
             OAuthClientRequest accessTokenRequest = OAuthClientRequest
-                    .tokenLocation("https://zoom.us/oauth/token")
+                    .tokenLocation(Const.TOKEN_URL_ZOOM)
                     .setGrantType(GrantType.AUTHORIZATION_CODE)
                     .setCode(codeUser)
                     .setRedirectURI(Const.REDIRECT_URL_ZOOM)
                     .buildQueryMessage();
 
-            accessTokenRequest.setHeader("Authorization","Basic "+encodedBytes);
+            accessTokenRequest.setHeader("Authorization", "Basic " + encodedBytes);
 
             OAuthClient client = new OAuthClient(new URLConnectionClient());
-            OAuthResourceResponse resourceResponse=client.resource(accessTokenRequest, OAuth.HttpMethod.POST,
+            OAuthResourceResponse resourceResponse = client.resource(accessTokenRequest, OAuth.HttpMethod.POST,
                     OAuthResourceResponse.class);
             return new JSONObject(resourceResponse.getBody());
         } catch (OAuthSystemException | OAuthProblemException | IOException e) {
@@ -66,25 +61,26 @@ public class Authorization {
         Desktop.getDesktop().browse(myUri);
     }
 
-    private String httpReceiver() throws IOException {
+    private String httpReceiver() {
+        //TODO Implement getting the code for the token
         return "";
     }
 
     public JSONObject refresh(String refresh) {
-        try{
+        try {
             String encodedBytes = Base64.getEncoder().encodeToString(
-                    (Const.CLIENT_ID_ZOOM+":"+Const.SECRET_ID_ZOOM).getBytes());
+                    (Const.CLIENT_ID_ZOOM + ":" + Const.SECRET_ID_ZOOM).getBytes());
 
             OAuthClientRequest accessTokenRequest = OAuthClientRequest
-                    .tokenLocation("https://zoom.us/oauth/token")
+                    .tokenLocation(Const.TOKEN_URL_ZOOM)
                     .setGrantType(GrantType.REFRESH_TOKEN)
                     .setRefreshToken(refresh)
                     .buildQueryMessage();
 
-            accessTokenRequest.setHeader("Authorization","Basic "+encodedBytes);
+            accessTokenRequest.setHeader("Authorization", "Basic " + encodedBytes);
 
             OAuthClient client = new OAuthClient(new URLConnectionClient());
-            OAuthResourceResponse resourceResponse=client.resource(accessTokenRequest, OAuth.HttpMethod.POST,
+            OAuthResourceResponse resourceResponse = client.resource(accessTokenRequest, OAuth.HttpMethod.POST,
                     OAuthResourceResponse.class);
             return new JSONObject(resourceResponse.getBody());
         } catch (OAuthSystemException | OAuthProblemException e) {

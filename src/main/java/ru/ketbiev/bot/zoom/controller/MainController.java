@@ -1,12 +1,14 @@
 package ru.ketbiev.bot.zoom.controller;
 
+import org.json.JSONObject;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import ru.ketbiev.bot.zoom.auxiliary.StaticValues;
-import ru.ketbiev.bot.zoom.config.Const;
+import ru.ketbiev.bot.zoom.model.UserToken;
 import ru.ketbiev.bot.zoom.repositories.TokenRepositories;
 import ru.ketbiev.bot.zoom.auxiliary.ConvertAnswer;
+import ru.ketbiev.bot.zoom.zoomapi.Authorization;
 
 public class MainController implements AbilityExtension {
 
@@ -22,26 +24,26 @@ public class MainController implements AbilityExtension {
     }
 
     public String getToken(Long id) {
-//        UserToken userToken = tokenRepositories.get(id);
-//        if (userToken!=null) {
-//            return userToken.getAccessToken();
-//        } else {
-//            Authorization authorization = new Authorization();
-//            JSONObject tokenObject = authorization.getOAuthToken();
-//            tokenRepositories.set(id, tokenObject);
-//            return tokenObject.get("access_token").toString();
-//        }
-        return Const.TOKEN_ZOOM;
+        UserToken userToken = tokenRepositories.get(id);
+        if (userToken!=null) {
+            return userToken.getAccessToken();
+        } else {
+            Authorization authorization = new Authorization();
+            JSONObject tokenObject = authorization.getOAuthToken();
+            tokenRepositories.set(id, tokenObject);
+            return tokenObject.get("access_token").toString();
+        }
     }
 
     public Reply start() {
         return Reply.of(update -> {
-//            tokenRepositories.delete(update.getMessage().getChatId());
-//            Authorization authorization = new Authorization();
-//            JSONObject tokenObject = authorization.getOAuthToken();
-//            tokenRepositories.set(update.getMessage().getChatId(), tokenObject);
+            tokenRepositories.delete(update.getMessage().getChatId());
+            Authorization authorization = new Authorization();
+            JSONObject tokenObject = authorization.getOAuthToken();
+            tokenRepositories.set(update.getMessage().getChatId(), tokenObject);
             silent.send(StaticValues.START_MASSAGE, update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().equals("/start"));
+        }, update -> update.getMessage().getText().equals("/start") ||
+                update.getMessage().getText().equals("/help"));
     }
 
     public Reply getUser() {
@@ -69,7 +71,7 @@ public class MainController implements AbilityExtension {
         return Reply.of(update -> {
             Long userId = update.getMessage().getChatId();
             String token = getToken(userId);
-            String answer = meetingController.getAllMeeting(update.getMessage().getText(), token);
+            String answer = meetingController.getAllMeeting(token);
             silent.send(ConvertAnswer.convertListMeetingToString(answer), userId);
         }, update -> update.getMessage().getText().equals("/events"));
     }

@@ -21,10 +21,12 @@ public class Bot extends AbilityBot {
     public int creatorId() {
         return 0;
     }
+
     @Override
     public String getBotUsername() {
         return Const.BOT_USERNAME;
     }
+
     @Override
     public String getBotToken() {
         return Const.TOKEN_BOT;

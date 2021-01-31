@@ -1,95 +1,77 @@
 package ru.ketbiev.bot.zoom.auxiliary;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import ru.ketbiev.bot.zoom.config.Const;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-public  class ConvertAnswer {
-    public static String convertUserToString(String str)  {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map map = mapper.readValue(str, Map.class);
-            return "Id: " + map.get("id") +
-                    "\nName: " + map.get("first_name") + " " + map.get("last_name")  +
-                    "\nEmail: " + map.get("email") +
-                    "\nCreated: " + map.get("created_at");
-        } catch (JsonProcessingException jsonProcessingException) {
-            return str;
+public class ConvertAnswer {
+    public static String convertUserToString(String str) {
+        if (str.startsWith("Error") || str.isEmpty()) {
+            return StaticValues.ERROR;
         }
+        JSONObject object = new JSONObject(str);
+        return "Id: " + object.get("id") +
+                "\nName: " + object.get("first_name") + " " + object.get("last_name") +
+                "\nEmail: " + object.get("email") +
+                "\nCreated: " + object.get("created_at");
     }
 
     public static String convertMeetingToString(String str) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map map = mapper.readValue(str, Map.class);
-            if (map.isEmpty()) {
-                return "warning!";
-            }
-            if (map.get("occurrences")==null) {
-                return "Id:           " + map.get("id") +
-                        "\nName:       " + map.get("topic") +
-                        "\nPassword:   " + map.get("password") +
-                        "\nStart:      " + map.get("start_time").toString().replace("T", " ").replace("Z", "") +
-                        "\nDuration:   " + map.get("duration") +
-                        "\nAgenda:     " + map.get("agenda") +
-                        "\nHost_email: " + map.get("host_email");
-            } else {
-                ArrayList list = (ArrayList) map.get("occurrences");
-                Map map2 = (Map) list.get(0);
-                return "Id:           " + map.get("id") +
-                        "\nName:       " + map.get("topic") +
-                        "\nPassword:   " + map.get("password") +
-                        "\nStart:      " + map2.get("start_time").toString().replace("T", " ").replace("Z", "") +
-                        "\nDuration:   " + map2.get("duration") +
-                        "\nAgenda:     " + map2.get("agenda") +
-                        "\nHost_email: " + map.get("host_email");
-            }
-        } catch (JsonProcessingException jsonProcessingException) {
-            return str;
+        if (str.startsWith("Error") || str.isEmpty()) {
+            return StaticValues.ERROR;
+        } else if (str.startsWith(StaticValues.BODY_EMPTY)) {
+            return StaticValues.BODY_EMPTY;
+        }
+        JSONObject object = new JSONObject(str);
+        if (!object.has("occurrences")) {
+            return "Id:           " + object.get("id") +
+                    "\nName:       " + object.get("topic") +
+                    "\nPassword:   " + object.get("password") +
+                    "\nStart:      " + object.get("start_time") +
+                    "\nDuration:   " + object.get("duration") +
+                    "\nAgenda:     " + object.get("agenda") +
+                    "\nHost_email: " + object.get("host_email");
+        } else {
+            JSONObject object1 = new JSONObject(object.get("occurrences"));
+            return "Id:           " + object1.get("id") +
+                    "\nName:       " + object1.get("topic") +
+                    "\nPassword:   " + object1.get("password") +
+                    "\nStart:      " + object1.get("start_time") +
+                    "\nDuration:   " + object1.get("duration") +
+                    "\nAgenda:     " + object1.get("agenda") +
+                    "\nHost_email: " + object1.get("host_email");
         }
     }
 
     public static String convertListMeetingToString(String str) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map map = mapper.readValue(str, Map.class);
-            ArrayList list = (ArrayList) map.get("meetings");
-            if (list.isEmpty()) {
-                return "not found meeting!";
-            }
-            StringBuilder s = new StringBuilder();
-            LinkedHashMap vv;
-            for (Object o : list) {
-                vv = (LinkedHashMap<String, String>)o;
-                s.append("\nId:           ").append(vv.get("id")).append("\nName:       ").append(vv.get("topic")).append("\nStart:      ").append(vv.get("start_time").toString().replace("T", " ").replace("Z", "")).append("\n");
-            }
-            return s.toString();
-        } catch (JsonProcessingException jsonProcessingException) {
-            return str;
+        if (str.startsWith("Error") || str.isEmpty()) {
+            return StaticValues.ERROR;
+        } else if (str.startsWith(StaticValues.BODY_EMPTY)) {
+            return StaticValues.BODY_EMPTY;
         }
+        JSONObject object = new JSONObject(str);
+        JSONArray listMeeting = (JSONArray) object.get("meetings");
+        return convertListToString(listMeeting);
     }
 
     public static String convertRoomsToString(String str) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map map = mapper.readValue(str, Map.class);
-            ArrayList list = (ArrayList) map.get("rooms");
-            if (list.isEmpty()) {
-                return "not found rooms";
-            }
-            StringBuilder s = new StringBuilder();
-            LinkedHashMap vv;
-            for (Object o : list) {
-                vv = (LinkedHashMap<String, String>)o;
-                    s.append("\nId:           ").append(vv.get("id")).append("\nName:       ").append(vv.get("topic")).append("\nStart:      ").append(vv.get("start_time").toString().replace("T", " ").replace("Z", "")).append("\n");
-            }
-            return s.toString();
-        } catch (JsonProcessingException jsonProcessingException) {
-            return str;
+        if (str.startsWith("Error") || str.isEmpty()) {
+            return StaticValues.ERROR;
         }
+        JSONObject object = new JSONObject(str);
+        JSONArray listMeeting = (JSONArray) object.get("rooms");
+        return convertListToString(listMeeting);
+    }
+
+    public static String convertListToString(JSONArray listMeeting) {
+        StringBuilder answer = new StringBuilder();
+        JSONObject jsonMeeting;
+        for (Object o : listMeeting) {
+            jsonMeeting = (JSONObject) o;
+            answer.append("\nId:           ").append(jsonMeeting.get("id"))
+                    .append("\nName:       ").append(jsonMeeting.get("topic"))
+                    .append("\nStart:      ").append(jsonMeeting.get("start_time"))
+                    .append("\n");
+        }
+        return answer.toString();
     }
 }

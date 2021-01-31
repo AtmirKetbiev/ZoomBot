@@ -9,8 +9,8 @@ import java.util.Map;
 public class RoomController {
     public String getRooms(String token) {
         Handler handler = new Handler();
-        Map<String,String> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+ token);
+        Map<String, String> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
         return handler.getRequest(Const.GET_ROOMS_URL, header);
     }
 }

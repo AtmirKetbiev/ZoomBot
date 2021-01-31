@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class UserController {
     public String getUser(String token) {
-        String url = String.format(Const.GET_USER_URL, "me");
         Handler handler = new Handler();
-        Map<String,String> header = new HashMap<>();
+        String url = String.format(Const.GET_USER_URL, "me");
+        Map<String, String> header = new HashMap<>();
         header.put("Authorization", "Bearer " + token);
         return handler.getRequest(url, header);
     }

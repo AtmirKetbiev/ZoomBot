@@ -39,14 +39,14 @@ public class InboundTransform {
     }
 
     public String getTypeRecurrence(String s) {
-        String arr[] = s.split("-");
+        String[] arr = s.split("-");
         return arr[arr.length-1].replace("day", "1")
                 .replace("week", "2")
                 .replace("monthly", "3");
     }
 
     public String getIntervalRecurrence(String s) {
-        String arr[] = s.split("-");
+        String[] arr = s.split("-");
         if (arr.length<2) {
             return null;
         }

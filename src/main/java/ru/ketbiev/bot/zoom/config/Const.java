@@ -9,7 +9,8 @@ public class Const {
     public final static String TOKEN_ZOOM = "";
 
     public final static String REDIRECT_URL_ZOOM = "http://localhost:8080/zoom";
-    public final static int REDIRECT_PORT_ZOOM = 8080;
+    public final static String AUTHORIZATION_URL_ZOOM = "https://zoom.us/oauth/authorize";
+    public final static String TOKEN_URL_ZOOM = "https://zoom.us/oauth/token";
 
     public static final String GET_USER_URL = "https://api.zoom.us/v2/users/%s";//{idUser}
 
@@ -19,6 +20,4 @@ public class Const {
     public final static String DELETE_MEETING_URL = "https://api.zoom.us/v2/meetings/%s";//{idMeeting}
 
     public final static String GET_ROOMS_URL = "https://api.zoom.us/v2/rooms/";
-
-    public final static String ERROR = "ERROR: check the entered data";
 }
